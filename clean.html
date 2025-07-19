@@ -44,7 +44,9 @@
 <body>
     <div class="container">
         <div class="message">Енот устанавливает Вам подписку...</div>
-        <div id="error" class="error" style="display: none;">Перенаправление не удалось. Пожалуйста, перейдите по ссылке вручную:</div>
+        <div id="error" class="error" style="display: none;">
+            Перенаправление не удалось. Пожалуйста, скопируйте ссылку ниже и откройте её в браузере или соответствующем приложении:
+        </div>
         <div id="link" class="link" style="display: none;"></div>
     </div>
 
@@ -62,9 +64,10 @@
                     // Проверяем, работает ли в Telegram Mini App
                     if (window.Telegram?.WebApp) {
                         window.Telegram.WebApp.ready();
-                        window.Telegram.WebApp.openLink(redirectTo);
+                        // Пытаемся открыть ссылку во внешнем браузере
+                        window.Telegram.WebApp.openLink(redirectTo, { try_instant_view: false, try_browser: true });
                     } else {
-                        // Пробуем открыть в новом окне, если не в Telegram
+                        // Пробуем открыть в новом окне браузера
                         const opened = window.open(redirectTo, '_blank');
                         if (!opened) {
                             window.location.href = redirectTo;
@@ -78,7 +81,7 @@
                     linkEl.innerHTML = `<a href="${redirectTo}" target="_blank">${redirectTo}</a>`;
                     linkEl.style.display = "block";
                 }
-            }, 1000); // Задержка 1 секунда
+            }, 1000); // Задержка 1 секунда для отображения сообщения
         } else {
             // Если redirect_to отсутствует
             document.getElementById("error").textContent = "Ошибка: ссылка для перенаправления не указана.";
