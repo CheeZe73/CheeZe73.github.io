@@ -1,92 +1,22 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Перенаправление</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            color: #333;
-            text-align: center;
-        }
-        .container {
-            padding: 20px;
-        }
-        .message {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-        .error {
-            font-size: 16px;
-            color: red;
-        }
-        .link {
-            margin-top: 20px;
-            font-size: 14px;
-            word-break: break-all;
-        }
-        a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Устанавливаем...</title>
+  <script>
+    (function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const target = urlParams.get("redirect_to");
+      if (target) {
+        // Перебрасываем из WebApp наружу
+        window.top.location.href = target;
+      } else {
+        document.body.innerText = "No redirect target";
+      }
+    })();
+  </script>
 </head>
 <body>
-    <div class="container">
-        <div class="message">Енот устанавливает Вам подписку...</div>
-        <div id="error" class="error" style="display: none;">
-            Перенаправление не удалось. Пожалуйста, скопируйте ссылку ниже и откройте её в браузере или соответствующем приложении:
-        </div>
-        <div id="link" class="link" style="display: none;"></div>
-    </div>
-
-    <script>
-        // Извлекаем redirect_to из URL
-        const currentURL = window.location.href;
-        const redirectTo = decodeURIComponent(currentURL.split('redirect_to=')[1] || '');
-
-        console.log("Redirect To:", redirectTo); // Для отладки
-
-        if (redirectTo) {
-            // Даём небольшую задержку для отображения сообщения
-            setTimeout(() => {
-                try {
-                    // Проверяем, работает ли в Telegram Mini App
-                    if (window.Telegram?.WebApp) {
-                        window.Telegram.WebApp.ready();
-                        // Пытаемся открыть ссылку во внешнем браузере
-                        window.Telegram.WebApp.openLink(redirectTo, { try_instant_view: false, try_browser: true });
-                    } else {
-                        // Пробуем открыть в новом окне браузера
-                        const opened = window.open(redirectTo, '_blank');
-                        if (!opened) {
-                            window.location.href = redirectTo;
-                        }
-                    }
-                } catch (e) {
-                    console.error("Redirect failed:", e);
-                    // Показываем сообщение об ошибке и ссылку
-                    document.getElementById("error").style.display = "block";
-                    const linkEl = document.getElementById("link");
-                    linkEl.innerHTML = `<a href="${redirectTo}" target="_blank">${redirectTo}</a>`;
-                    linkEl.style.display = "block";
-                }
-            }, 1000); // Задержка 1 секунда для отображения сообщения
-        } else {
-            // Если redirect_to отсутствует
-            document.getElementById("error").textContent = "Ошибка: ссылка для перенаправления не указана.";
-            document.getElementById("error").style.display = "block";
-        }
-    </script>
+  Енот устанавливает Вам подписку...
 </body>
 </html>
